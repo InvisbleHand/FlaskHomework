@@ -1,0 +1,10 @@
+{% extends "layout.html" %} {% block title %}{{ news.title }}{% endblock %} {%
+block title_content %}{{ news.title }}{% endblock %} {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='article.css') }}" />
+<div class="container-content">
+  <div class="date">
+    发布日期: {{ news.created_date.strftime('%Y年%m月%d日 %H:%M') }}
+  </div>
+  <div class="article-content">{{ news.content }}</div>
+</div>
+{% endblock %}

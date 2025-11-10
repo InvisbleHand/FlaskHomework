@@ -1,0 +1,33 @@
+{% extends "layout.html" %} {% block title %}创建新的新闻{% endblock %} {% block
+title_content %}发布新的文章{% endblock %} {% block content %}
+
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='create_news.css') }}"
+/>
+
+<form method="POST">
+  <div>
+    <label for="title">新闻标题</label>
+    <input
+      type="text"
+      id="title"
+      name="title"
+      required
+      placeholder="请输入新闻标题..."
+    />
+  </div>
+
+  <div>
+    <label for="content">文章内容</label>
+    <textarea
+      id="content"
+      name="content"
+      required
+      placeholder="请输入文章主体内容..."
+    ></textarea>
+  </div>
+
+  <button type="submit">发布新闻</button>
+</form>
+{% endblock %}

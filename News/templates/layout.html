@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}新闻门户{% endblock %}</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='layout.css') }}"
+    />
+  </head>
+  <body>
+    <header class="sticky-nav">
+      <div class="nav-container">
+        <a href="{{ url_for('home') }}" class="nav-link">回到主页</a>
+        <a href="{{ url_for('create_news') }}" class="nav-link post-btn"
+          >发表文章</a
+        >
+      </div>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+      <div class="flash-message {{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
+    <div class="container">
+      <h1 class="news-title">{% block title_content %}{% endblock %}</h1>
+
+      {% block content %}{% endblock %}
+    </div>
+
+    <script>
+      (function () {
+        let container = document.querySelector('.flash-messages');
+        if (!container) return;
+        setTimeout(function () {
+          container.style.transition =
+            'opacity 300ms ease, transform 300ms ease';
+          container.style.opacity = '0';
+          container.style.transform = 'translateY(8px)';
+          setTimeout(function () {
+            if (container && container.parentNode) {
+              container.parentNode.removeChild(container);
+            }
+          }, 350);
+        }, 2000);
+      })();
+    </script>
+  </body>
+</html>
