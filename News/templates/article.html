@@ -1,10 +1,47 @@
-{% extends "layout.html" %} {% block title %}{{ news.title }}{% endblock %} {%
-block title_content %}{{ news.title }}{% endblock %} {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='article.css') }}" />
-<div class="container-content">
-  <div class="date">
-    发布日期: {{ news.created_date.strftime('%Y年%m月%d日 %H:%M') }}
+{% extends "layout.html" %} {% block title %}{{ news.title }} - 新闻网站{%
+endblock %} {% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-10">
+    <a href="{{ url_for('home') }}" class="btn btn-outline-secondary mb-4">
+      <i class="bi bi-arrow-left"></i> 返回首页
+    </a>
+
+    <article>
+      {% if news.cover_image %}
+      <div class="mb-4">
+        <img
+          src="{{ url_for('static', filename=news.cover_image) }}"
+          class="article-cover rounded"
+          alt="{{ news.title }}"
+          onerror="this.style.display='none'"
+        />
+      </div>
+      {% endif %}
+
+      <header class="mb-4">
+        <h1 class="display-5 fw-bold">{{ news.title }}</h1>
+        <div class="text-muted">
+          <i class="bi bi-calendar"></i>
+          发布时间: {{ news.created_date.strftime('%Y年%m月%d日 %H:%M') }}
+        </div>
+        <hr />
+      </header>
+
+      <div class="article-content">
+        {{ news.content|replace('\n', '<br />')|safe }}
+      </div>
+    </article>
   </div>
-  <div class="article-content">{{ news.content }}</div>
 </div>
+
+<style>
+  .article-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #333;
+  }
+  .article-content br {
+    margin-bottom: 1rem;
+  }
+</style>
 {% endblock %}

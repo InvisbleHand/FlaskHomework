@@ -1,33 +1,71 @@
-{% extends "layout.html" %} {% block title %}创建新的新闻{% endblock %} {% block
-title_content %}发布新的文章{% endblock %} {% block content %}
+{% extends "layout.html" %} {% block title %}发布新闻 - 新闻网站{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title mb-0">
+          <i class="bi bi-pencil-square"></i> 发布新闻
+        </h4>
+      </div>
+      <div class="card-body">
+        <form method="POST" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="title" class="form-label"
+              >新闻标题 <span class="text-danger">*</span></label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="title"
+              name="title"
+              required
+              maxlength="255"
+              placeholder="请输入新闻标题"
+            />
+            <div class="form-text">标题最多255个字符</div>
+          </div>
 
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='create_news.css') }}"
-/>
+          <div class="mb-3">
+            <label for="cover_image" class="form-label">封面图片</label>
+            <input
+              type="file"
+              class="form-control"
+              id="cover_image"
+              name="cover_image"
+              accept=".png,.jpg,.jpeg,.gif,.webp"
+            />
+            <div class="form-text">
+              支持格式: PNG, JPG, JPEG, GIF, WEBP。最大16MB。
+            </div>
+          </div>
 
-<form method="POST">
-  <div>
-    <label for="title">新闻标题</label>
-    <input
-      type="text"
-      id="title"
-      name="title"
-      required
-      placeholder="请输入新闻标题..."
-    />
+          <div class="mb-3">
+            <label for="content" class="form-label"
+              >新闻内容 <span class="text-danger">*</span></label
+            >
+            <textarea
+              class="form-control"
+              id="content"
+              name="content"
+              rows="12"
+              required
+              placeholder="请输入新闻内容..."
+            ></textarea>
+            <div class="form-text">支持多行文本，可以使用回车换行</div>
+          </div>
+
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-check-circle"></i> 发布新闻
+            </button>
+            <a href="{{ url_for('home') }}" class="btn btn-outline-secondary">
+              <i class="bi bi-x-circle"></i> 取消
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
-
-  <div>
-    <label for="content">文章内容</label>
-    <textarea
-      id="content"
-      name="content"
-      required
-      placeholder="请输入文章主体内容..."
-    ></textarea>
-  </div>
-
-  <button type="submit">发布新闻</button>
-</form>
+</div>
 {% endblock %}

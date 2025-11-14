@@ -1,31 +1,62 @@
+import os
 from flask import Flask, redirect, render_template, request, url_for, flash
-from flask_sqlalchemy import SQLAlchemy
+from werkzeug.utils import secure_filename
+from werkzeug.security import generate_password_hash
+from uuid import uuid4
 from datetime import datetime
 
+from config import Config   
+from models import db, News
+from utils import allowed_file
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:123456@localhost:3306/news_db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config["TEMPLATES_AUTO_RELOAD"] = True
-app.config['SECRET_KEY'] = '1A45fG-39kLpZ_7bHjM_6QxY-2cDvP_9eSjT-8uAwE'
 
-db = SQLAlchemy(app)
+def create_app():
+    app = Flask(__name__)
+    
+    app.config.from_object(Config)
+    
+    db.init_app(app)
+    
+    with app.app_context():
+        db.create_all()
 
-class News(db.Model):
-    __tablename__ = 'news'
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(255), nullable=False) 
-    content = db.Column(db.Text, nullable=False)
-    created_date = db.Column(db.DateTime, nullable=False)
+    return app
 
-with app.app_context():
-    db.create_all()
+app = create_app()
 
 
 @app.route("/", methods=["GET"])
 def home():
     news_list = News.query.order_by(News.created_date.desc()).all()
-    return render_template("lists.html", news_list=news_list)
+    return render_template("home.html", news_list=news_list)
+
+
+# @app.route("/login", methods=["GET", "POST"])
+# def login():
+#     return render_template("login.html")
+
+
+# @app.route("/register", methods=["GET", "POST"])
+# def register():
+#     username = request.form.get("username")
+#     password = request.form.get("password")
+#     hashed_password = generate_password_hash(password, method='scrypt')
+
+#     user_exists = User.query.filter_by(username=username).first()
+#     if user_exists:
+#         flash("用户名已存在！", "error")
+#         return redirect(url_for('register'))
+
+#     new_user = User(username=username, password_hash=hashed_password)
+
+#     try:
+#         db.session.add(new_user)
+#         db.session.commit()
+#         return redirect(url_for('login'))
+#     except Exception as e:
+#         db.session.rollback()
+#         flash(f"注册失败: {e}", "error")
+#         return redirect(url_for('register'))
 
 
 @app.route("/article/<int:news_id>", methods=["GET"])
@@ -39,13 +70,26 @@ def create_news():
     if request.method == "POST":
         title = request.form.get("title", "")
         content = request.form.get("content", "")
+        cover_image_path = None
 
-        if not title.strip() or not content.strip():
-            return "标题或者内容不为空", 400
+        file = request.files.get('cover_image')
+        if file and file.filename and allowed_file(file.filename, app.config):
+            upload_folder = app.config['UPLOAD_FOLDER']
+            os.makedirs(upload_folder, exist_ok=True)
+            
+            filename = f"{uuid4().hex}_{secure_filename(file.filename)}"
+            file_path = os.path.join(upload_folder, filename)
+            file.save(file_path)
+            cover_image_path = f"imgs/{filename}"
+
+        if not title.strip() or not content:
+            flash('标题和内容不能为空！', 'error')
+            return redirect(url_for('create_news'))
         
         new_item = News(
             title=title.strip(), 
-            content=content.strip(), 
+            content=content,
+            cover_image=cover_image_path,
             created_date=datetime.now()
         )
         try:
@@ -64,4 +108,4 @@ def create_news():
 
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True)

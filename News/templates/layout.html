@@ -3,53 +3,362 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}新闻门户{% endblock %}</title>
-
+    <title>{% block title %}新闻网站{% endblock %}</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='layout.css') }}"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-color: #2c5aa0;
+        --secondary-color: #f8f9fa;
+        --accent-color: #e74c3c;
+        --text-dark: #2c3e50;
+        --text-light: #6c757d;
+        --border-color: #e9ecef;
+        --shadow-light: 0 2px 12px rgba(0, 0, 0, 0.08);
+        --shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.12);
+        --gradient-primary: linear-gradient(135deg, #2c5aa0 0%, #3498db 100%);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Noto Sans SC', sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+        min-height: 100vh;
+        color: var(--text-dark);
+        line-height: 1.6;
+      }
+
+      .navbar {
+        background: var(--gradient-primary) !important;
+        box-shadow: var(--shadow-light);
+        padding: 1rem 0;
+        border-bottom: 3px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .navbar-brand {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: white !important;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .navbar-nav .nav-link {
+        color: rgba(255, 255, 255, 0.9) !important;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        margin: 0 0.2rem;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+      }
+
+      .navbar-nav .nav-link:hover {
+        color: white !important;
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateY(-1px);
+      }
+
+      .main-container {
+        min-height: calc(100vh - 160px);
+        padding: 2rem 0;
+      }
+
+      .card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: var(--shadow-light);
+        transition: all 0.3s ease;
+        background: white;
+        overflow: hidden;
+      }
+
+      .card:hover {
+        box-shadow: var(--shadow-medium);
+        transform: translateY(-3px);
+      }
+
+      .card-header {
+        background: var(--gradient-primary);
+        color: white;
+        border: none;
+        padding: 1.25rem 1.5rem;
+        font-weight: 600;
+      }
+
+      .card-body {
+        padding: 1.5rem;
+      }
+
+      .btn {
+        border-radius: 8px;
+        padding: 0.6rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: none;
+      }
+
+      .btn-primary {
+        background: var(--gradient-primary);
+        box-shadow: 0 2px 8px rgba(44, 90, 160, 0.3);
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(44, 90, 160, 0.4);
+      }
+
+      .btn-outline-secondary {
+        border: 2px solid var(--border-color);
+        color: var(--text-light);
+      }
+
+      .btn-outline-secondary:hover {
+        background: var(--secondary-color);
+        border-color: var(--text-light);
+      }
+
+      .form-control {
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+      }
+
+      .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(44, 90, 160, 0.1);
+      }
+
+      .form-label {
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 0.5rem;
+      }
+
+      .form-text {
+        color: var(--text-light);
+        font-size: 0.85rem;
+      }
+
+      .news-card {
+        height: 100%;
+        margin-bottom: 1.5rem;
+      }
+
+      .cover-image {
+        height: 220px;
+        object-fit: cover;
+        width: 100%;
+        transition: transform 0.3s ease;
+      }
+
+      .news-card:hover .cover-image {
+        transform: scale(1.03);
+      }
+
+      .cover-placeholder {
+        height: 220px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+      }
+
+      .article-cover {
+        max-height: 450px;
+        object-fit: cover;
+        width: 100%;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-medium);
+      }
+
+      .article-content {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: var(--text-dark);
+      }
+
+      .article-content br {
+        margin-bottom: 1rem;
+      }
+
+      .flash-messages {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1050;
+        min-width: 320px;
+      }
+
+      .alert {
+        border: none;
+        border-radius: 10px;
+        box-shadow: var(--shadow-medium);
+        padding: 1rem 1.5rem;
+        border-left: 4px solid;
+      }
+
+      .alert-success {
+        background: linear-gradient(135deg, #d4edda, #c3e6cb);
+        border-left-color: #28a745;
+        color: #155724;
+      }
+
+      .alert-danger {
+        background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+        border-left-color: #dc3545;
+        color: #721c24;
+      }
+
+      footer {
+        background: var(--text-dark);
+        color: white;
+        padding: 2rem 0;
+        margin-top: 3rem;
+        border-top: 4px solid var(--primary-color);
+      }
+
+      .text-gradient {
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .display-4 {
+        font-weight: 700;
+        margin-bottom: 1rem;
+      }
+
+      .lead {
+        font-size: 1.2rem;
+        color: var(--text-light);
+        font-weight: 300;
+      }
+
+      .empty-state {
+        padding: 4rem 2rem;
+        text-align: center;
+        background: white;
+        border-radius: 12px;
+        box-shadow: var(--shadow-light);
+      }
+
+      .empty-state i {
+        font-size: 4rem;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+      }
+
+      @media (max-width: 768px) {
+        .main-container {
+          padding: 1rem 0;
+        }
+
+        .card-body {
+          padding: 1rem;
+        }
+
+        .flash-messages {
+          left: 20px;
+          right: 20px;
+          min-width: auto;
+        }
+
+        .display-4 {
+          font-size: 2rem;
+        }
+      }
+    </style>
   </head>
   <body>
-    <header class="sticky-nav">
-      <div class="nav-container">
-        <a href="{{ url_for('home') }}" class="nav-link">回到主页</a>
-        <a href="{{ url_for('create_news') }}" class="nav-link post-btn"
-          >发表文章</a
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container">
+        <a class="navbar-brand" href="{{ url_for('home') }}">
+          <i class="bi bi-newspaper me-2"></i>新闻聚合平台
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
         >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('home') }}">
+                <i class="bi bi-house me-1"></i> 首页
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('create_news') }}">
+                <i class="bi bi-plus-circle me-1"></i> 发布新闻
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
-    </header>
+    </nav>
 
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
     messages %}
     <div class="flash-messages">
       {% for category, message in messages %}
-      <div class="flash-message {{ category }}">{{ message }}</div>
+      <div
+        class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show"
+      >
+        <i
+          class="bi bi-{{ 'exclamation-triangle' if category == 'error' else 'check-circle' }} me-2"
+        ></i>
+        {{ message }}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+        ></button>
+      </div>
       {% endfor %}
     </div>
     {% endif %} {% endwith %}
-    <div class="container">
-      <h1 class="news-title">{% block title_content %}{% endblock %}</h1>
 
-      {% block content %}{% endblock %}
-    </div>
+    <main class="main-container">
+      <div class="container">{% block content %}{% endblock %}</div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-      (function () {
-        let container = document.querySelector('.flash-messages');
-        if (!container) return;
+      document.addEventListener('DOMContentLoaded', function () {
         setTimeout(function () {
-          container.style.transition =
-            'opacity 300ms ease, transform 300ms ease';
-          container.style.opacity = '0';
-          container.style.transform = 'translateY(8px)';
-          setTimeout(function () {
-            if (container && container.parentNode) {
-              container.parentNode.removeChild(container);
-            }
-          }, 350);
-        }, 2000);
-      })();
+          const alerts = document.querySelectorAll('.alert');
+          alerts.forEach(function (alert) {
+            const bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+          });
+        }, 5000);
+      });
     </script>
   </body>
 </html>
