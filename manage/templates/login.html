@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>用户登录</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+
+    <style>
+      :root {
+        --primary-color: #007bff;
+        --danger-color: #dc3545;
+        --secondary-bg: #f8f9fa;
+        --border-color: #dee2e6;
+        --text-color: #343a40;
+        --header-color: #212529;
+      }
+
+      body {
+        background-color: #f4f7f9;
+        font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        color: var(--text-color);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+      }
+
+      .login-container {
+        background: white;
+        padding: 40px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        width: 100%;
+        max-width: 400px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: var(--header-color);
+        font-weight: 600;
+        font-size: 2rem;
+      }
+
+      .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        padding: 0.6rem 1.2rem;
+        font-weight: 500;
+        transition: background-color 0.2s, border-color 0.2s;
+        border-radius: 4px;
+      }
+      .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+      }
+
+      .btn-outline-secondary {
+        color: #6c757d;
+        border-color: #6c757d;
+        border: none;
+        text-decoration: underline;
+        padding: 0;
+      }
+      .btn-outline-secondary:hover {
+        color: var(--primary-color);
+        background-color: transparent;
+      }
+
+      .btn-full-width {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container">
+      <h1>用户登录</h1>
+      <form action="{{ url_for('auth.login') }}" method="post">
+        <div class="mb-3">
+          <input
+            type="text"
+            name="username"
+            id="username"
+            class="form-control"
+            placeholder="用户名"
+            required
+          />
+        </div>
+
+        <div class="mb-4">
+          <input
+            type="password"
+            name="password"
+            id="password"
+            class="form-control"
+            placeholder="密码"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full-width mb-3">
+          登录
+        </button>
+
+        <div class="text-center">
+          <a
+            href="{{ url_for('auth.register') }}"
+            class="btn btn-outline-secondary"
+          >
+            没有账号？立即注册
+          </a>
+        </div>
+      </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
