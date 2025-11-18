@@ -1,0 +1,137 @@
+<div
+  class="modal fade"
+  id="addStudentModal"
+  tabindex="-1"
+  aria-labelledby="addStudentModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addStudentModalLabel">添加学生</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form
+          id="addStudentForm"
+          action="{{ url_for("manage.add") }}"
+          method="POST"
+        >
+          <div class="mb-3">
+            <label for="studentName" class="form-label">学生姓名</label>
+            <input
+              type="text"
+              class="form-control"
+              id="studentName"
+              name="studentName"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="studentScore" class="form-label">学生成绩</label>
+            <input
+              type="text"
+              class="form-control"
+              id="studentScore"
+              name="studentScore"
+              required
+            />
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              取消
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              id="submitStudent"
+            >
+              保存
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="editStudentModal"
+  tabindex="-1"
+  aria-labelledby="editStudentModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editStudentModalLabel">编辑学生信息</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form
+          id="editStudentForm"
+          action="{{ url_for('manage.edit') }}"
+          method="POST"
+        >
+          <input type="hidden" id="editStudentId" name="studentId" value="" />
+
+          <div class="mb-3">
+            <label for="editStudentName" class="form-label">学生姓名</label>
+            <input
+              type="text"
+              class="form-control"
+              id="editStudentName"
+              name="studentName"
+              required
+              value=""
+            />
+          </div>
+          <div class="mb-3">
+            <label for="editStudentScore" class="form-label">学生成绩</label>
+            <input
+              type="text"
+              class="form-control"
+              id="editStudentScore"
+              name="studentScore"
+              required
+              value=""
+            />
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              取消
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              id="saveEditedStudent"
+            >
+              保存修改
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

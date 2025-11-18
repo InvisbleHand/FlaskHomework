@@ -14,7 +14,7 @@ def login():
         if not username or not password:
             return alert_error("用户名或密码不能为空")
 
-        teacher = db.session.scalar(db.select(Teacher).where(Teacher.name == username))
+        teacher = Teacher.query.filter_by(name=username).first()
             
         if teacher and check_password_hash(teacher.password_hash, password):             
             session['user_id'] = teacher.id
@@ -39,7 +39,7 @@ def register():
         if rePassword != password:
             return alert_error("两次密码不一致")
 
-        if db.session.scalar(db.select(Teacher).where(Teacher.name == username)):
+        if Teacher.query.filter_by(name=username).first():
             return alert_error("该用户名已被注册")
 
         password_hash = generate_password_hash(password)

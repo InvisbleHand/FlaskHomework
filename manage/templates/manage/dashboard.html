@@ -1,0 +1,109 @@
+{% extends "manage/base.html" %} {% block content %} {% include
+'manage/_header.html' %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <div class="card p-0">
+        <div
+          class="card-header d-flex justify-content-between align-items-center"
+        >
+          <span><i class="fas fa-list me-2"></i>学生列表</span>
+          <form
+            action="{{ url_for('manage.search') }}"
+            method="GET"
+            class="d-flex ms-auto"
+            style="max-width: 350px"
+          >
+            <input
+              type="text"
+              name="query"
+              class="form-control form-control-sm me-2"
+              placeholder="输入姓名查询..."
+              aria-label="Search"
+              value="{{ search_query | default('') }}"
+            />
+            <button type="submit" class="btn btn-sm btn-primary">
+              <i class="fas fa-search"></i>
+            </button>
+          </form>
+        </div>
+
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead>
+                <tr>
+                  <th width="50">序号</th>
+                  <th>姓名</th>
+                  <th>成绩</th>
+                  <th class="text-center" width="180">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for student in students %}
+                <tr>
+                  <td>{{ loop.index }}</td>
+                  <td>{{ student.name }}</td>
+                  <td>{{ student.grade }}</td>
+                  <td
+                    class="d-flex justify-content-center align-items-center gap-2"
+                  >
+                    <button
+                      class="btn btn-sm btn-outline-primary btn-action-wide edit-btn"
+                      data-id="{{ student.id }}"
+                      data-name="{{ student.name }}"
+                      data-grade="{{ student.grade }}"
+                      data-bs-toggle="modal"
+                      data-bs-target="#editStudentModal"
+                    >
+                      <i class="fas fa-edit"></i> 编辑
+                    </button>
+
+                    <a
+                      href="{{ url_for('manage.delete', student_id=student.id) }}"
+                      class="btn btn-sm btn-outline-danger btn-action-wide"
+                      onclick="return confirm('确定要删除学生 {{ student.name }} 的记录吗？');"
+                    >
+                      <i class="fas fa-trash-alt"></i> 删除
+                    </a>
+                  </td>
+                </tr>
+                {% else %}
+                <tr>
+                  <td colspan="4" class="text-center text-muted">
+                    目前没有学生记录。
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include 'manage/_modals.html' %} {% endblock %} {% block modal_scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const editModal = document.getElementById('editStudentModal');
+
+    editModal.addEventListener('show.bs.modal', function (event) {
+      const button = event.relatedTarget;
+
+      const studentId = button.getAttribute('data-id');
+      const studentName = button.getAttribute('data-name');
+      const studentGrade = button.getAttribute('data-grade');
+
+      editModal.querySelector('#editStudentId').value = studentId;
+      editModal.querySelector('#editStudentName').value = studentName;
+      editModal.querySelector('#editStudentScore').value = studentGrade;
+
+      editModal.querySelector('.modal-title').textContent =
+        '编辑学生信息: ' + studentName;
+    });
+  });
+</script>
+{% endblock %}

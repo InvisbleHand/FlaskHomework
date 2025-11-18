@@ -19,7 +19,7 @@ def create_app():
     def index():
         if 'user_id' not in session:
             return redirect(url_for('auth.login'))
-        return render_template('manage.html')
+        return render_template(url_for('manage.index'))
     return app
 
 if __name__ == '__main__':
@@ -28,4 +28,4 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all() 
 
-    app.run(debug=False)
+    app.run(debug=True)

@@ -7,7 +7,7 @@ manage_bp = Blueprint('manage', __name__)
 @manage_bp.route('/', methods=['GET']) 
 def index():
     students = db.session.query(Student).all() 
-    return render_template('manage.html', students=students)
+    return render_template('manage/dashboard.html', students=students)
 
 
 @manage_bp.route('/add', methods=['POST']) 
@@ -47,7 +47,20 @@ def edit():
     db.session.commit() 
 
     return redirect(url_for('manage.index'))
-    
+
+@manage_bp.route('/search', methods=["GET", "POST"])
+def search():
+    search_query = request.args.get('query')
+
+    if search_query:
+        students = db.session.scalars(
+            db.select(Student).where(Student.name.like(f'%{search_query}%'))
+        ).all() 
+    else:
+        students = db.session.scalars(db.select(Student)).all() 
+        
+    return render_template('manage/dashboard.html', students=students, search_query=search_query)
+
     
 def validate_input(name, grade_str):
     if not name or not grade_str:
