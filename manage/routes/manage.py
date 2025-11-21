@@ -24,7 +24,7 @@ def add():
     return redirect(url_for('manage.index'))
 
 
-@manage_bp.route('/delete/<int:student_id>', methods=['GET'])
+@manage_bp.route('/delete/<int:student_id>', methods=['POST'])
 def delete(student_id):
     student = db.get_or_404(Student, student_id) 
     db.session.delete(student) 
