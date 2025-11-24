@@ -4,8 +4,8 @@ from werkzeug.utils import secure_filename
 from uuid import uuid4
 from datetime import datetime
 
-from config import Config   
-from models import db, News
+from config import Config  
+from models import db, News, Category
 from utils import allowed_file
 
 
@@ -13,21 +13,35 @@ def create_app():
     app = Flask(__name__)
     
     app.config.from_object(Config)
-    
     db.init_app(app)
-    
     with app.app_context():
         db.create_all()
 
     return app
 
 app = create_app()
+                    
+
+@app.context_processor
+def inject_categories():
+    categories = Category.query.all()
+    return dict(categories=categories)
 
 
 @app.route("/", methods=["GET"])
 def home():
     news_list = News.query.order_by(News.created_date.desc()).all()
     return render_template("home.html", news_list=news_list)
+
+
+@app.route("/category/<int:category_id>", methods=["GET"])
+def category_page(category_id):
+    category = Category.query.get_or_404(category_id)
+    
+    news_list = News.query.filter_by(category_id=category_id)\
+                          .order_by(News.created_date.desc()).all()
+    
+    return render_template("category.html", category=category, news_list=news_list)
 
 
 @app.route("/article/<int:news_id>", methods=["GET"])
@@ -38,11 +52,14 @@ def article(news_id):
 
 @app.route("/create", methods=["GET", "POST"])
 def create_news():
+    categories = Category.query.all()
+
     if request.method == "POST":
         title = request.form.get("title", "")
         content = request.form.get("content", "")
         cover_image_path = None
-
+        category_id = request.form.get("category_id")
+        
         file = request.files.get('cover_image')
         if file and file.filename and allowed_file(file.filename, app.config):
             upload_folder = app.config['UPLOAD_FOLDER']
@@ -56,13 +73,15 @@ def create_news():
         if not title.strip() or not content:
             flash('标题和内容不能为空！', 'error')
             return redirect(url_for('create_news'))
-        
-        new_item = News(
+                
+        new_item = News (
             title=title.strip(), 
             content=content,
             cover_image=cover_image_path,
+            category_id=int(category_id),
             created_date=datetime.now()
         )
+
         try:
             db.session.add(new_item)
             db.session.commit()
@@ -74,8 +93,8 @@ def create_news():
             db.session.rollback()
             flash(f'文章发表失败: {e}', 'error')
             return redirect(url_for('create_news'))
-        
-    return render_template("create_news.html")
+
+    return render_template("create_news.html", categories=categories)
 
 
 if __name__ == "__main__":

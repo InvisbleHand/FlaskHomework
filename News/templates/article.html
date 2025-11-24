@@ -1,47 +1,59 @@
-{% extends "layout.html" %} {% block title %}{{ news.title }} - 新闻网站{%
-endblock %} {% block content %}
+{% extends "layout.html" %} {% block title %}{{ news.title }}{% endblock %} {%
+block content %}
 <div class="row justify-content-center">
-  <div class="col-lg-10">
-    <a href="{{ url_for('home') }}" class="btn btn-outline-secondary mb-4">
-      <i class="bi bi-arrow-left"></i> 返回首页
-    </a>
+  <div class="col-lg-8">
+    <header class="mb-5 text-center">
+      <h1 class="display-5 fw-bold mb-3 lh-sm">{{ news.title }}</h1>
 
-    <article>
-      {% if news.cover_image %}
-      <div class="mb-4">
-        <img
-          src="{{ url_for('static', filename=news.cover_image) }}"
-          class="article-cover rounded"
-          alt="{{ news.title }}"
-          onerror="this.style.display='none'"
-        />
-      </div>
-      {% endif %}
-
-      <header class="mb-4">
-        <h1 class="display-5 fw-bold">{{ news.title }}</h1>
-        <div class="text-muted">
-          <i class="bi bi-calendar"></i>
-          发布时间: {{ news.created_date.strftime('%Y年%m月%d日 %H:%M') }}
+      <div
+        class="d-flex align-items-center justify-content-center text-muted small"
+      >
+        <div class="d-flex align-items-center">
+          <i class="bi bi-calendar3 me-2"></i>
+          <span>{{ news.created_date.strftime('%Y年%m月%d日 %H:%M') }}</span>
         </div>
-        <hr />
-      </header>
-
-      <div class="article-content">
-        {{ news.content|replace('\n', '<br />')|safe }}
       </div>
+    </header>
+
+    {% if news.cover_image %}
+    <figure class="mb-5">
+      <img
+        src="{{ url_for('static', filename=news.cover_image) }}"
+        class="img-fluid rounded-3 w-100 shadow-sm"
+        alt="{{ news.title }}"
+        onerror="this.style.display='none'"
+      />
+    </figure>
+    {% endif %}
+
+    <article class="article-body">
+      {{ news.content|replace('\n', '<br />')|safe }}
     </article>
+
+    <hr class="my-5" />
+
+    <div class="text-center">
+      <a
+        href="{{ url_for('home') }}"
+        class="btn btn-outline-secondary px-4 rounded-pill"
+      >
+        阅读更多新闻
+      </a>
+    </div>
   </div>
 </div>
 
 <style>
-  .article-content {
-    font-size: 1.1rem;
+  .article-body {
+    font-size: 1.25rem; /* 20px，适合阅读 */
     line-height: 1.8;
-    color: #333;
+    color: #2d3748;
+    font-family: var(--font-body);
   }
-  .article-content br {
-    margin-bottom: 1rem;
+  .article-body br {
+    margin-bottom: 1.5em; /* 增加段落间距 */
+    display: block;
+    content: '';
   }
 </style>
 {% endblock %}

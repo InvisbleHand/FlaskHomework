@@ -1,71 +1,81 @@
-{% extends "layout.html" %} {% block title %}发布新闻 - 新闻网站{% endblock %}
-{% block content %}
+{% extends "layout.html" %} {% block title %}发布新文章{% endblock %} {% block
+content %}
 <div class="row justify-content-center">
-  <div class="col-lg-8">
-    <div class="card">
-      <div class="card-header">
-        <h4 class="card-title mb-0">
-          <i class="bi bi-pencil-square"></i> 发布新闻
-        </h4>
-      </div>
-      <div class="card-body">
-        <form method="POST" enctype="multipart/form-data">
-          <div class="mb-3">
-            <label for="title" class="form-label"
-              >新闻标题 <span class="text-danger">*</span></label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="title"
-              name="title"
-              required
-              maxlength="255"
-              placeholder="请输入新闻标题"
-            />
-            <div class="form-text">标题最多255个字符</div>
-          </div>
-
-          <div class="mb-3">
-            <label for="cover_image" class="form-label">封面图片</label>
-            <input
-              type="file"
-              class="form-control"
-              id="cover_image"
-              name="cover_image"
-              accept=".png,.jpg,.jpeg,.gif,.webp"
-            />
-            <div class="form-text">
-              支持格式: PNG, JPG, JPEG, GIF, WEBP。最大16MB。
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label for="content" class="form-label"
-              >新闻内容 <span class="text-danger">*</span></label
-            >
-            <textarea
-              class="form-control"
-              id="content"
-              name="content"
-              rows="12"
-              required
-              placeholder="请输入新闻内容..."
-            ></textarea>
-            <div class="form-text">支持多行文本，可以使用回车换行</div>
-          </div>
-
-          <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary">
-              <i class="bi bi-check-circle"></i> 发布新闻
-            </button>
-            <a href="{{ url_for('home') }}" class="btn btn-outline-secondary">
-              <i class="bi bi-x-circle"></i> 取消
-            </a>
-          </div>
-        </form>
-      </div>
+  <div class="col-lg-8 col-xl-7">
+    <div class="mb-4">
+      <h2 class="fw-bold">发布新闻</h2>
+      <p class="text-muted">分享最新的故事与见闻</p>
     </div>
+
+    <form method="POST" enctype="multipart/form-data" class="needs-validation">
+      <div class="mb-4">
+        <label for="title" class="form-label fw-bold">标题</label>
+        <input
+          type="text"
+          class="form-control form-control-lg fs-4"
+          id="title"
+          name="title"
+          required
+          maxlength="255"
+          placeholder="请输入标题..."
+        />
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <label for="category_id" class="form-label fw-bold">分类</label>
+          <select
+            class="form-select"
+            id="category_id"
+            name="category_id"
+            required
+          >
+            <option value="" disabled selected>选择分类...</option>
+            {% for category in categories %}
+            <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-md-6 mb-4">
+          <label for="cover_image" class="form-label fw-bold"
+            >封面图 (可选)</label
+          >
+          <input
+            type="file"
+            class="form-control"
+            id="cover_image"
+            name="cover_image"
+            accept=".png,.jpg,.jpeg,.gif,.webp"
+          />
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label for="content" class="form-label fw-bold">内容详情</label>
+        <textarea
+          class="form-control"
+          id="content"
+          name="content"
+          rows="15"
+          required
+          placeholder="在此处开始写作..."
+          style="resize: vertical"
+        ></textarea>
+      </div>
+
+      <div class="d-flex align-items-center gap-3 pt-3 border-top">
+        <button type="submit" class="btn btn-primary px-5 rounded-pill">
+          发布文章
+        </button>
+        <a
+          href="{{ url_for('home') }}"
+          class="text-muted text-decoration-none ms-2"
+        >
+          取消
+        </a>
+      </div>
+    </form>
   </div>
 </div>
 {% endblock %}
